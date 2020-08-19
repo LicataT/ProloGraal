@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "Setting up JAVA_HOME and PATH for GraalVM..."
+
+export PROJECT_ROOT=$(pwd)
+export JAVA_HOME=/usr/lib/graalvm
+export PATH=/usr/lib/graalvm/bin:$PATH
+export PATH=/usr/lib/maven/bin:$PATH
+export PS1='(Graal) '$PS1
+#export PATH=/usr/lib/mx:$PATH
+
+echo "Downloading ANTLR and setting up aliases..."
+[ -f "antlr-4.7.1-complete.jar" ] || wget https://www.antlr.org/download/antlr-4.7.1-complete.jar
+
+bash --init-file envaliases
+
+echo "Exiting GraalVM environnment..."

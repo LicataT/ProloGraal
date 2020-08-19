@@ -1,0 +1,25 @@
+\documentclass[../report.tex]{subfiles}
+\begin{document}
+\section{Tests unitaires}\label{sec:unittests}
+Afin de contrôler le fonctionnement et d'éviter les problèmes de régression lors de l'implémentation, des tests unitaires ont été réalisés. Ces tests se basent sur le modèle de ceux implémentés dans le projet d'exemple \sl{}. 
+\subsection{Fonctionnement}
+Ces tests fonctionnent de la manière suivante : dans le dossier tests, on trouve des ensembles de 3 fichiers, avec le même nom mais des extensions différentes :
+\begin{itemize}
+    \item Le fichier source, avec son extension normale (.sl pour \sl{}, .pl pour Prolog)
+    \item Un fichier .input, qui contient l'entrée clavier qui sera fournie au programme lors de son exécution.
+    \item Un fichier .output, qui contient la sortie attendue après l'exécution du programme.
+\end{itemize}
+Ce système est assez bien fait, car il n'y a donc pas besoin d'écrire de code Java pour rajouter des tests supplémentaires. Cependant, l'implémentation de démonstration est assez basique, et ne donne pas beaucoup d'informations sur l'endroit du test qui a échoué. C'est compréhensible pour \sl{}, vu que chaque test contient uniquement un programme. Mais pour Prolog, vu qu'il faut tester différentes entrées par prédicat, ce n'est pas suffisant.
+\subsection{Améliorations}
+Des améliorations ont donc été apportées au système de test, pour permettre de comparer la sortie après chaque entrée, et ainsi trouver exactement et directement la requête qui n'a pas obtenu le résultat attendu. Ces améliorations ajoutent également le support de commentaires aux fichiers .input et .output.
+\subsection{Tests}
+Les tests ont été découpés par fonctionnalités qu'ils testent. Les tests implémentés sont les suivants :
+\begin{itemize}
+    \item 01\_facts : teste les faits simples, sans corps. Teste également le parser avec des structures complexes et sur plusieurs lignes.
+    \item 02\_variables : teste les variables, et plus généralement l'unification avec des faits simples. Teste également le test d'occurence.
+    \item 03\_lists : teste les listes, et l'unification entre celles-ci.
+    \item 04\_clauses : teste différentes clauses connues, comme la concaténation de liste, de D-listes, le prédicat owns, etc... Teste des prédicats récursifs et d'autres non récursifs.
+    \item 05\_builtins : teste les prédicats intégrés \mintinline{Prolog}{write} et \mintinline{Prolog}{var}. 
+    \item 06\_redo : teste la fonctionnalité permettant d'obtenir plus de résultats, en prenant soit de vérifier le fonctionnement avec le prédicat avec effet de bords \mintinline{Prolog}{write}.
+\end{itemize}
+\end{document}

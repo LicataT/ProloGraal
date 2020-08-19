@@ -1,0 +1,9 @@
+\documentclass[../report.tex]{subfiles}
+\begin{document}
+\section{Problèmes rencontrés}
+Aucun gros problème n'a été rencontré durant la réalisation de ce projet. Cependant, de nombreux bugs ont été découverts au fur et à mesure. L'implémentation des tests unitaires a grandement aidé à la détection et la résolution de ces bugs, et ceux-ci auraient dû être réalisés plus tôt dans le projet.
+
+Voici quand même un problème ayant coûté un certain temps et réduit la qualité du projet. 
+\subsection{JLine3}
+JLine est une librairie open source permettant de faciliter et d'améliorer grandement la gestion de l'entrée console, en proposant par exemple des fonctionnalités comme un historique similaire à celui de tous les terminaux. La librairie fonctionnait parfaitement, jusqu'à l'arrivée des tests unitaires... En effet, comme tous les terminaux, elle utilise des caractères de contrôle invisibles pour contrôler l'affichage. Ces caractères faisaient planter les tests, et j'ai perdu un temps fou à essayer de les enlever, à l'aide d'expressions régulières, de remplacement de chaînes, et même de simple \texttt{substring}, pour obtenir uniquement la sortie texte, sans succès. J'ai donc décidé à mon grand regret d'abandonner la librairie et de revenir à une simple ligne de commande sans historique ou autres fonctionnalités, mais également sans problèmes avec les tests.
+\end{document}

@@ -1,0 +1,88 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{ae, lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\graphicspath{{figs/}}
+\usepackage{titlesec}
+\usepackage{minted}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{lastpage}
+\usepackage{csquotes}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+\usepackage[a4paper, left=20mm, right=20mm, top=20mm, bottom=30mm]{geometry}
+
+\setlength{\parindent}{0in}
+\titlespacing\section{0pt}{6pt plus 2pt minus 2pt}{6pt plus 2pt minus 2pt}
+\titlespacing\subsection{0pt}{6pt plus 2pt minus 2pt}{6pt plus 2pt minus 2pt}
+
+\title{\vspace{-2,0cm}%
+\includegraphics[width=\textwidth]{../logo.png}~
+\\[2cm]
+\Huge
+\hrulefill\\
+\vspace{1,0cm}
+Prolog avec Truffle et GraalVM\\
+Manuel d'installation et d'utilisation\\
+\vspace{0,6cm}
+\Large
+\hrulefill\\\vspace{2,0cm}
+Projet de semestre 5\\
+I-3\\
+Automne 2019/2020
+\vspace{2.5cm}}
+\author{
+  Martin Spoto \\
+  martin.spoto@edu.hefr.ch\\
+  \\
+  Responsable :\\
+  Frédéric Bapst\\
+  Frederic.Bapst@hefr.ch
+}
+
+\begin{document}
+\maketitle
+
+\pagebreak
+\tableofcontents
+\pagebreak
+
+\section{Introduction}
+Ce document décrit l'installation et l'utilisation du projet "Prolog avec Truffle et GraalVM", pour l'environnement Linux. Le projet fonctionne également sous Windows, mais les étapes d'installation ne sont pas détaillées. 
+
+Ce manuel assume que vous disposez localement d'une copie du projet, et que vous vous trouvez dans le répertoire "code" de celui-ci.
+\section{Installation des dépendances}
+Cette section décrit l'installation des différents pré-requis au fonctionnement du projet.
+\subsection{GraalVM}
+Le projet a été développé avec GraalVM Community Edition 19.2.0.1.\\
+On peut télécharger cette version ici : \href{https://github.com/oracle/graal/releases/tag/vm-19.2.0.1}{https://github.com/oracle/graal/releases/tag/vm-19.2.0.1}. Prenez la version qui correspond à votre système d'exploitation, et décompressez l'archive, par exemple dans \texttt{/usr/lib/graalvm}. Prenez note du chemin d'accès de l'archive décompressée.
+\subsection{Maven}
+Maven est utilisé comme gestionnaire de version. La version 3.6.3 a été utilisée durant le projet, mais les versions proches et futures devraient également fonctionner.\\
+On peut télécharger Maven ici : \href{https://maven.apache.org/download.cgi}{https://maven.apache.org/download.cgi}. Comme pour GraalVM, décompressez l'archive, par exemple dans \texttt{/usr/lib/maven}.
+\section{Préparation de l'environnement}
+Pour préparer les variable d'environnement nécessaires, un script \texttt{envsetup} est fourni. Ce script assume que les chemins de GraalVM et de Maven sont ceux proposés plus haut. Si ce n'est pas le cas, éditez le script avec vos chemins d'installation avant le lancement.
+
+Ce script définit GraalVM comme environnement Java en réglant la variable JAVA\_HOME. Il ajoute également les répertoires bin de GraalVM et de Maven au PATH. Les changements de ce script sont temporaires. En tapant \texttt{exit}, on peut à tout moment sortir de l'environnement (pratique si vous avez plusieurs installations de Java par exemple).
+
+Le script définit également quelques alias qui sont surtout utiles au développement. Ces alias sont consultables dans le fichier \texttt{envaliases}. Toujours pour le développement, le script récupère une copie de la librairie ANTLR utilisée pour générer le parser/lexer (vous aurez besoin pour cela de la commande \texttt{wget}). (D'ailleurs, si un jour vous souhaitez faire exactement ça, un script \texttt{generate\_parser} est également fourni.)
+
+Si tout s'est bien passé, la commande \mintinline{text}{mvn --version} devrait s'effectuer avec succès, et la version Java devrait être celle de GraalVM.
+\section{Compilation du projet}
+Si l'environnement est correctement configuré, alors la compilation s'effectue simplement avec la commande \texttt{mvn package}. Cette opération produit un fichier JAR dans launcher/target et dans language/target. 
+\section{Lancement du projet}
+Si la compilation du projet s'est passée sans encombres, alors on peut lancer le projet à l'aide du script fourni \texttt{prolograal}, en lui donnant comme argument un fichier Prolog, par exemple : \texttt{./prolograal language/tests/02\_variables.pl}, et voilà ! Le projet tourne.
+\section{Notes pour Windows}
+Pour Windows, à part que les scripts ne sont pas utilisables, l'installation et l'utilisation se déroulent exactement de la même manière. Il faut donc simplement configurer la variable JAVA\_HOME et le PATH correctement.
+\end{document}

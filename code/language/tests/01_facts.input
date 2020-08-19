@@ -1,0 +1,13 @@
+fact.
+fact2.
+fact(X).
+hello(world).
+hello(world2).
+hello(world3).
+multiples(arg1, arg2).
+multiples(arg1, arg3).
+'this is also'('a fact').
+numbers(test, 42, 21.21).
+numbers(test, 42, 21.2121).
+this(is(getting, a(bit(out, of, hand)))).
+fact(world).

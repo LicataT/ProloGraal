@@ -1,0 +1,3 @@
+polyglot_eval(A, 'js', ~ let a = 0; for(let i = 0; i <= 10; i++){ a+=i; } a; ~), '='(A,55).
+polyglot_eval(A, 'js', ~ let a = 'hello'; let b = ' world'; a+b; ~), '='(A,'hello world').
+polyglot_eval(A, 'js', ~ 2 < 1 ~), '='(A,'false').

@@ -1,0 +1,8 @@
+consult('./tests/07_consult_clauses.pl.excluded').
+'='(Clauses,~test(10). test(12). string(abc).~), consultstring(Clauses).
+hello(world).
+added_clause(A).
+test(10), test(12), string(abc).
+test(14).
+consultstring('test(14).').
+test(14).

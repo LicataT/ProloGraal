@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/code/language/src/main/language.iml" filepath="$PROJECT_DIR$/code/language/src/main/language.iml" />
+      <module fileurl="file://$PROJECT_DIR$/code/launcher/launcher.iml" filepath="$PROJECT_DIR$/code/launcher/launcher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/code/language/prolograal.iml" filepath="$PROJECT_DIR$/code/language/prolograal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/code/prolograal-parent.iml" filepath="$PROJECT_DIR$/code/prolograal-parent.iml" />
+    </modules>
+  </component>
+</project>

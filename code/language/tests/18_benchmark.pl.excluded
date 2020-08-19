@@ -1,0 +1,49 @@
+recommendedN(100000).
+
+
+benchmark2(N, Time):-
+    benchmark(N),
+    benchmark(N),
+    benchmark(N),
+    benchmark(N),
+    real_time(A),
+    benchmark(N),
+    real_time(B),
+    is(C,'-'(B,A)),
+    '='(Time,C).
+
+benchmark_text('time for N equal ').
+
+benchmark_one:-
+    do_benchmark(100).
+
+benchmark_two:-
+    do_benchmark(1000).
+
+benchmark_three:-
+    do_benchmark(10000).
+
+benchmark_four:-
+    do_benchmark(30000).
+
+benchmark_five:-
+    do_benchmark(50000).
+
+do_benchmark(N):-
+    benchmark_text(BenchText),
+    benchmark(N,Time),
+    write(BenchText), write(N), write(': '), write(Time).
+
+
+benchmark(N, Time):-
+    real_time(A),
+    benchmark(N),
+    real_time(B),
+    is(C,'-'(B,A)),
+    '='(Time,C).
+
+benchmark(0).
+
+benchmark(N):-
+    is(N1,'-'(N,1)),
+    benchmark(N1).

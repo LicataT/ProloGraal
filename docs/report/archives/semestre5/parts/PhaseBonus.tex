@@ -1,0 +1,300 @@
+\documentclass[../report.tex]{subfiles}
+\begin{document}
+\section{Phase bonus}
+Maintenant que la base du projet est là, on peut s'attaquer à des fonctionnalités supplémentaires. Les fonctionnalités retenues sont les suivantes :
+\begin{itemize}
+    \item Résultats multiples : pouvoir obtenir plusieurs résultats dans l'interpréteur
+    \item Prédicats intégrés : mettre en place l'architecture nécessaire à l'intégration de prédicats intégrés
+    \item Questions multiples : possiblité de demander plusieurs buts séparés par des virgules dans l'interpréteur
+\end{itemize}
+Bien que non vitales, ces fonctionnalités semblent être nécessaires à tout interpréteur Prolog.
+\subsection{Résultats multiples}
+Actuellement, l'interpréteur permet uniquement de récupérer le premier succès. Il faut trouver un moyen de permettre d'en trouver plus.
+\subsubsection{Besoins}
+Voici ce qu'il faut pouvoir faire afin d'être capable de récupérer plusieurs résultats :
+\begin{itemize}
+    \item Avoir une commande ou une touche permettant de demander le prochain succès. Par exemple, dans l'interpréteur \textit{GNU Prolog}, on peut obtenir le prochain succès avec la touche \texttt{';'}.
+    \item Être capable de recommencer la recherche depuis l'endroit où l'on s'est arrêté dans l'arbre de preuve.
+\end{itemize}
+\subsubsection{Demande du prochain succès}
+Pour la demande du prochain succès, on peut imaginer demander à l'utilisateur d'appuyer sur une touche, ou alors d'entrer une commande spéciale. C'est cette deuxième option qui a été choisie, car elle présente les avantages suivants :
+\begin{itemize}
+    \item On ne supporte pas actuellement le fait de pouvoir réagir à une touche particulière, vu qu'on lit l'entrée utilisateur ligne par ligne. C'est donc plus facile à implémenter.
+    \item On ne casse pas la compatibilité avec les tests unitaires existants (voir section \ref{sec:unittests}), ce qui permet de rajouter des tests pour valider le fonctionnement des résultats multiples sans devoir réécrire les tests précédents.
+\end{itemize}
+La commande choisie est la suivante : \texttt{redo}. Son nom est assez explicite sur sa fonctionnalité. Voici le comportement attendu :
+\begin{enumerate}
+    \item L'utilisateur fait une requête dans l'interpréteur. Il obtient le premier résultat.
+    \item L'utilisateur entre la commande \texttt{redo}. Il obtient le prochain résultat.
+    \item L'utilisateur peut recommencer l'étape 2 jusqu'à ce qu'il obtienne un échec, ce qui signifie qu'il n'y a plus d'autres résultats.
+    \item Si l'utilisateur entre de nouveau la commande, alors il continue d'obtenir des échecs.
+\end{enumerate}
+\subsubsection{Reprise de la recherche}
+Pour la reprise de la recherche, une stratégie possible est de se rappeler du parcours effectué jusqu'à l'obtention du succès. Cela revient à se rappeler des branches choisies dans l'arbre de preuve. Pour simplifier et profiter du fait qu'on utilise la pile d'appels, on peut effectuer cette sauvegarde au moment où l'on obtient le succès, pendant que l'on remonte la pile d'appels.
+
+Quand on souhaite obtenir le prochain résultat, on utilise ce parcours sauvegardé quand on descend dans l'arbre de preuve, pour sauter directement à l'embranchement qui nous intéresse. Il faut cepedant faire attention à ne pas oublier de quand même unifier le but courant avec la tête de l'embranchement choisi, pour que les variables se retrouvent dans le bon état quand on arrive en bas de l'arbre.
+\subsubsection{Implémentation : interpréteur}
+Dans l'interpréteur, il faut plusieurs choses : reconnaître la commande \texttt{redo}, garder en mémoire le parcours effectué, et garder en mémoire le contexte de la dernière requête, pour éviter de devoir parser à nouveau l'entrée à chaque fois. L'utilisation du parcours effectué est décrite dans l'implémentation des noeuds de l'arbre de preuve (\ref{subsubsec:bonusphasetreenodes}). Il s'agit d'un \texttt{Deque}, mais il sera utilisé comme un \texttt{Stack}, toujours pour les raisons citées à la section \ref{subsubsec:phase3listener}.
+\begin{minted}{Java}
+Deque<Integer> currentBranches = new ArrayDeque<>();
+ProloGraalRuntime lastRuntime = null;
+boolean skipParsing = false;
+\end{minted}
+Quand l'utilisateur effectue la requête initiale, on parse normalement, et on sauvegarde le contexte. On doit également réinitialiser la sauvegarde du parcours, vu qu'il s'agit d'une nouvelle requête.
+\begin{minted}{Java}
+Source source = null;
+if (!skipParsing) {
+    // new goal, so clear the current branches
+    currentBranches.clear();
+
+    source = Source.newBuilder("pl", line, null).build();
+}
+ProloGraalRuntime runtime;
+try {
+    if (!skipParsing) {
+        // parse the source to get a runtime
+        runtime = new ProloGraalRuntime(
+                ProloGraalParserImpl.parseProloGraal(source),
+                language.getContextReference().get()
+        );
+        // save runtime
+        lastRuntime = runtime;
+    } else {
+        // ... handle redo
+    }
+} catch (ProloGraalParseError parseError) {
+    // clear latest runtime on error so we cannot redo
+    lastRuntime = null;
+    writer.println(parseError.getMessage());
+    continue;
+}
+\end{minted}
+Sinon, si l'utilisateur entre la commande \texttt{redo}, il faut vérifier qu'il existe déjà un contexte, et indiquer que l'on est dans cette situation à l'aide d'un booléen. 
+\begin{minted}{Java}
+if (line.equals("redo.")) {
+    // triggers a redo instead of a normal parsing
+    if (lastRuntime == null) {
+        writer.println("no");
+        continue;
+    }
+    skipParsing = true;
+}
+\end{minted}
+On se sert ensuite de ce booléen pour passer outre le parsing, en récupérant à la place simplement le précédent contexte.
+\begin{minted}{Java}
+ProloGraalRuntime runtime;
+try {
+    if (!skipParsing) {
+        // ... handle first request (see above)
+    } else {
+        runtime = lastRuntime;
+    }
+} catch (ProloGraalParseError parseError) {
+    // ... handle parse error (only possible when not redoing)
+}
+\end{minted}
+On va ensuite appeler le noeud de résolution normalement, mais en lui donnant la sauvegarde du parcours. On détecte également si ce parcours est vide après l'appel au noeud de résolution, car cela signifie qu'il n'y a plus de solutions et qu'on peut donc effacer le contexte courant.
+\begin{minted}{Java}
+skipParsing = false;
+// get the result from the resolver node
+callResult =
+        (ProloGraalBoolean) Truffle.getRuntime()
+        .createCallTarget(context.getResolverNode())
+        .call(runtime, currentBranches);
+if (currentBranches.isEmpty()) {
+    // there are no more solutions
+    lastRuntime = null;
+}
+\end{minted}
+\subsubsection{Implémentation : noeud de résolution}
+Dans le noeud de résolution, rien de spécial à faire si ce n'est récupérer et transmettre le parcours au premier noeud de l'arbre de preuve.
+\begin{minted}{Java}
+Deque<Integer> branches = (Deque<Integer>) frame.getArguments()[1];
+// ...
+ProloGraalBoolean r = proofTreeNode.execute(branches);
+\end{minted}
+\subsubsection{Implémentation : noeuds de l'arbre de preuve}\label{subsubsec:bonusphasetreenodes}
+Dans les noeuds de l'arbre de preuve, on reçoit le parcours en paramètre. Il y a deux possibilités : si le parcours est vide, alors on est en train de descendre pour la première fois dans l'arbre. Sinon, on est dans un \texttt{redo}.
+
+Dans le cas d'un \texttt{redo}, il faut passer directement à la bonne branche, mais en unifiant quand même le but courant avec la tête de la clause. Plusieurs changements sont nécessaires. On commence par changer un peu la logique générale : avant, on essayait toutes les clauses dont la tête était la même que celle du but courant. On va maintenant filtrer directement celles qui ont la même tête mais aussi qui sont unifiables avec le but courant.
+\begin{minted}{Java}
+// filter clauses that are unifiable with the current goal
+// creating copies and saving variables state as needed
+List<ProloGraalClause> unifiableClauses =
+        IntStream.range(0, possibleClauses.size())
+            .filter(x -> { // filter clauses that are unifiable
+                ProloGraalClause clause = possibleClauses.get(x).copy();
+                currentGoal.save();
+                boolean r = clause.getHead().unify(currentGoal);
+                currentGoal.undo();
+                return r;
+            })
+            .mapToObj(x -> possibleClauses.get(x).copy()) // copy clauses
+            .collect(Collectors.toList());
+\end{minted}
+Ceci permet, quand on obtient un succès, de savoir directement s'il reste ou non des branches possibles, et donc de faire une optimisation sur la sauvegarde de parcours nous envoyant directement sur le prochain succès possible lors du \texttt{redo}. 
+
+Pour la sauvegarde du parcours, l'algorithme est donc le suivant : au moment où on atteint un succès, dans la feuille de l'arbre de preuve, le parcours est forcément vide. Par contre, les noeuds précédents ne savent pas si le succès a été trouvé juste en dessous d'eux par la feuille, ou bien plus bas dans la pile d'appels. Ce qui signifie que plus haut dans l'arbre, le parcours peut déjà être en partie rempli. On ajoute donc la trace du parcours si une ou plusieurs des conditions suivantes est vraie :
+\begin{itemize}
+    \item il reste une clause possible après celle ayant donné le succès dans le noeud actuel. Il y a donc un potentiel succès supplémentaire.
+    \item le parcours n'est pas vide. Cela signifie que la première condition s'est déjà activée plus bas dans l'arbre, et il faut donc retenir le parcours exact qui mène à cet embranchement, même si le noeud actuel n'a lui même plus d'autres succès possibles.
+\end{itemize}
+Ces deux conditions permettent de remonter l'arbre sans sauvegarder le parcours jusqu'à ce qu'on arrive à un noeud qui a encore des possiblités. On pourra donc continuer la recherche directement depuis le prochain succès possible, sans devoir redescendre au précédent succès d'abord.
+\begin{minted}{Java}
+if (!branches.isEmpty() || i + 1 < unifiableClauses.size()) {
+    if (branches.isEmpty()) {
+        i = i + 1; // if we're at the bottom go directly to next node
+    }
+    branches.push(i); // add the path that gave the success
+}
+\end{minted}
+Pour la descente et l'utilisation du parcours, on s'appuie sur le fait que l'on utilise une boucle sur les différentes clauses possibles afin de passer directement à celle qui nous intéresse.
+\begin{minted}{Java}
+int start = 0;
+if (!branches.isEmpty()) {
+    // if we're redoing we need to skip to the right branch directly
+    start = branches.pop();
+}
+
+for (int i = start; i < unifiableClauses.size(); i++) {
+    // ...
+\end{minted}
+Et ceci conclut l'implémentation de notre \texttt{redo}.
+\subsection{Prédicats intégrés}
+Le langage Prolog contient de nombreux prédicats intégrés, facilitant certaines opérations et permettant de réaliser des opérations qui ne sont pas directement issues de la logique, comme manipuler des fichiers par exemple. Le but ici n'est évidemment pas d'ajouter tous les prédicats de la librairie de Prolog, mais d'en intégrer un petit nombre en guise de preuve de fonctionnement. Les prédicats choisis sont les suivants :
+\begin{itemize}
+    \item var(X) : permet de déterminer si X est une variable (encore inconnue). Ce prédicat a été choisi car il a un effet au moment de l'unification : var(X) doit retourner faux, alors que var(a) doit retourner vrai.
+    \item write(X) : écrit dans la sortie standard la représentation textuelle de X. Ce prédicat a été choisi car il a un effet de bord. Il a donc un comportement non trivial lors de l'exécution et surtout quand on \texttt{redo}.
+\end{itemize}
+\subsubsection{Implémentation : partie commune}
+Pour la partie commune à tous les prédicats, une sous-classe de \texttt{ProloGraalClause} a été définie : \texttt{ProloGraalBuiltinClause}. Cette classe introduit deux méthodes. La première, \texttt{execute}, permet aux prédicats intégrés d'effectuer des actions ayant un potentiel effet de bord. La deuxième est une surcharge de la méthode de copie des clauses, et ne modélise pas directement un comportement de Prolog; elle permet simplement d'éviter que les clauses intégrées perdent leur statuts quand on les copie au moment de la résolution.
+\begin{minted}{Java}
+public void execute() {
+    // default behaviour is to do nothing...
+}
+
+// this method is abstract to force subclasses to implement it
+@Override
+public abstract ProloGraalClause copy();
+\end{minted}
+\subsubsection{Prédicat \texttt{var}}
+Le prédicat \texttt{var} a un effet au moment de l'unification. Il faut donc pouvoir intervenir au moment de l'unification de la tête de la clause. Pour cela, on va remplacer la tête par une extension de la classe \texttt{ProloGraalStructure}, afin de pouvoir réimplémenter la méthode \texttt{unify}.
+\begin{minted}[breaklines]{Java}
+public final class ProloGraalVarBuiltin extends ProloGraalBuiltinClause {
+    private static class VarPredicateHead extends ProloGraalStructure {
+        public VarPredicateHead(Map<ProloGraalVariable, ProloGraalVariable> variables) {
+            super(variables);
+            // add the correct functor for this predicate, and an anonymous variable since we do not need it
+            setFunctor(new ProloGraalAtom(variables, "var"));
+            addSubterm(new ProloGraalVariable(variables, "_"));
+        }
+        // ...
+\end{minted}
+On réimplémente donc la méthode \texttt{unify} en lui donnant le comportement que l'on désire, c'est-à-dire vérifier si l'argument est une variable ou non.
+\begin{minted}[breaklines]{Java}
+@Override
+public boolean unify(ProloGraalTerm<?> other) {
+    if (other instanceof ProloGraalStructure) {
+        ProloGraalStructure struct = (ProloGraalStructure) other;
+        if (struct.getFunctor().equals(getFunctor()) && struct.getArity() == 1) {
+            // checks if the root value of the first argument resolves to a variable
+            return struct.getArguments().get(0).getRootValue() instanceof ProloGraalVariable;
+        }
+    }
+    return false;
+}
+\end{minted}
+Il ne faut pas oublier d'également implémenter la méthode de copie pour éviter de perdre le comportement par défaut, comme expliqué précédemment :
+\begin{minted}[breaklines]{Java}
+// override the default copy so we do not lose the custom unification behaviour
+@Override
+public ProloGraalStructure copy(Map<ProloGraalVariable, ProloGraalVariable> variables) {
+    return new VarPredicateHead(variables);
+}
+\end{minted}
+Il faut ensuite remplacer la tête de notre prédicat intégré par notre implémentation :
+\begin{minted}{Java}
+public ProloGraalVarBuiltin() {
+    super();
+    // creates our custom head and set it
+    VarPredicateHead head = new VarPredicateHead(getVariables());
+    setHead(head);
+}  
+\end{minted}
+Et voilà, l'implémentation du prédicat intégré est terminée.
+\subsubsection{Prédicat \texttt{write}}
+Le prédicat \texttt{write} n'a pas d'effets sur le mécanisme d'unification, par contre, il un effet de bord. Il a également besoin du contexte pour avoir accès à la sortie standard.
+
+Il faut donc récupérer la sortie standard, ainsi que préparer le préparer le prédicat en choissant sa tête. Contrairement à \texttt{var}, une structure classique avec le foncteur \texttt{write} et une variable en argument suffit. On garde juste une référence vers la variable pour pouvoir récupérer son contenu au moment de l'affichage.
+\begin{minted}{Java}
+private final PrintWriter writer; // used for outputting
+private final ProloGraalContext context; // we keep the context for the copy method
+private ProloGraalVariable arg; // the variable X in write(X).
+
+public ProloGraalWriteBuiltin(ProloGraalContext context) {
+    super();
+    // get printer from context
+    this.writer = new PrintWriter(context.getOutput(), true);
+    this.context = context;
+
+    // create the head of this clause
+    // since we do not need custom unification, a simple structure is enough
+    ProloGraalStructure head = new ProloGraalStructure(getVariables());
+    head.setFunctor(new ProloGraalAtom(getVariables(), "write"));
+    // we create and store the variable to access it more easily later in the execute method
+    arg = new ProloGraalVariable(getVariables(), "_");
+    head.addSubterm(arg);
+    setHead(head);
+}
+\end{minted}
+Il ne reste plus qu'à implémenter l'affichage. Pour cela, on surcharge la méthode \texttt{execute} définie dans \texttt{ProloGraalBuiltinClause}. Il suffit d'afficher la représentation en chaîne de caractères de la valeur racine de l'argument, en enlevant éventuellement les apostrophes des atomes (car c'est ce que fait le moteur \textit{GNU Prolog}).
+\begin{minted}{Java}
+@Override
+public void execute() {
+    String str = arg.getRootValue().toString();
+    if(str.startsWith("'") && str.endsWith("'")) {
+        // strip single quotes
+        str = str.substring(1, str.length()-1);
+    }
+    writer.print(str);
+    writer.flush();
+}
+\end{minted}
+Ne reste que la méthode de copie qui est triviale, et le prédicat est implémenté.
+\subsubsection{Les raisons de la méthode \texttt{execute}}
+On peut se demander l'utilité de la méthode \texttt{execute}. On pourrait en effet effectuer les opérations au moment de l'unification. Mais l'implémentation actuelle de la résolution se base sur le fait que l'on peut réaliser l'unification sans provoquer d'effets de bord autres que l'unification des variables. Il est donc nécessaire de séparer les comportements ayant de tels effets, pour éviter des problèmes lors de la descente de l'arbre de preuve, spécialement quand on fait un \texttt{redo}. L'exécution de la méthode \texttt{execute} se fait donc uniquement lors de la première traversée d'un certain noeud de l'arbre de preuve, après l'unification.
+\begin{minted}{Java}
+// only execute built-in the first time we traverse their nodes
+if (branches.isEmpty()) {
+    if (unifiableClause instanceof ProloGraalBuiltinClause) {
+        // if the clause is a built-in, execute its internal behaviour
+        ((ProloGraalBuiltinClause) unifiableClause).execute();
+    }
+}
+\end{minted}
+\subsubsection{Intégration des prédicats}
+Les prédicats sont implémentés, mais ils ne sont pas encore utilisables. Il faut encore les greffer à la liste des clauses du programme. Cette opération se fait au moment où on construit le \texttt{ProloGraalRuntime}, juste après le parsing. Une méthode \texttt{installBuiltins} est appelée à la fin de la construction. Elle se charge d'instancier les différents prédicats intégrés et de les ajouter à la liste des clauses :
+\begin{minted}{Java}
+private void installBuiltins() {
+    ProloGraalClause varBuiltin = new ProloGraalVarBuiltin();
+    clauses.put(varBuiltin.getHead(), Collections.singletonList(varBuiltin));
+
+    ProloGraalClause writeBuiltin = new ProloGraalWriteBuiltin(context);
+    clauses.put(writeBuiltin.getHead(), Collections.singletonList(writeBuiltin));
+}
+\end{minted}
+\subsection{Questions multiples}
+Dans la plupart des moteurs Prolog, on peut demander plusieurs buts directement dans l'interpréteur, en les séparant avec des virgules. Un problème qui peut apparaître est le fait que l'on réutilise le parser pour traiter la requête utilisateur. En effet, si \mintinline{Prolog}{test :- test(A), write(A).} est une ligne tout à fait valide, juste \mintinline{Prolog}{test(A), write(A).} ne l'est pas. Heureusement, on peut résoudre ce problème avec une astuce très simple : avec de parser la ligne, on rajoute une tête valide. 
+\begin{minted}{Java}
+line = "goals :- " + line;
+\end{minted}
+Il suffit ensuite dans le noeud de résolution de donner au premier noeud de l'arbre de preuve non plus la tête de la clause qu'on reçoit depuis le noeud d'interprétation, mais son corps :
+\begin{minted}{Java}
+Deque<ProloGraalTerm<?>> goals = new ArrayDeque<>(clause.getGoals());
+// create the root node of the proof tree
+ProloGraalProofTreeNode proofTreeNode = new ProloGraalProofTreeNode(clauses, goals);
+\end{minted}
+Et nous pouvons maintenant effectuer plusieurs requêtes dans l'interpréteur.
+\subsection{Synthèse}
+Cette phase bonus touche à sa fin. Elle corrige les derniers problèmes de la phase 3, et prouve qu'il est possible d'ajouter des prédicats intégrés à notre moteur.
+\end{document}

@@ -1,0 +1,82 @@
+\documentclass[../report.tex]{subfiles}
+\begin{document}
+\section{Glossaire}\label{sec:glossary}
+\subsection*{ANTLR}
+Ensemble de librairies utilisées pour la génération du parser et du lexer.
+\subsection*{Deque}
+Structure de données supportant l'insertion et la suppression efficace au début et à la fin.
+\subsection*{GraalVM}
+Plateforme supportant Truffle. Contient une JVM.
+\subsection*{Java}
+Langage de programmation utilisé pour le projet et ses librairies.
+\subsection*{Java Virtual Machine (JVM)}
+Machine virtuelle permettant l'exécution de programmes Java.
+\subsection*{Maven}
+Gestionnaire de dépendances et de cycle de développement.
+\subsection*{SimpleLanguage}
+Projet de démonstration utilisant Truffle et GraalVM.
+\subsection*{Stack (pile)}
+Structure de données représentant une pile : le dernier élément inséré est le premier élément qui ressort.
+\subsection*{Truffle}
+Ensemble de librairies utilisant GraalVM pour fournir des fonctionnalités d'implémentation de langages.
+\subsection*{arbre de preuve}
+Arbre créé en suivant les règles logiques d'un programme.
+\subsection*{arité}
+Nombre d'arguments d'une structure Prolog.
+\subsection*{backtracking}
+Technique de programmation basée sur l'essai systématique de toutes les possiblités.
+\subsection*{clauses}
+En Prolog, décrit une relation logique. Il existe deux types de clauses : les clauses simples, appelées faits, et les clauses composées.
+\begin{itemize}
+    \item Un fait est de la forme : \mintinline{Prolog}{fact.}
+    \item Une clause composée est de la forme : \mintinline{Prolog}{head :- rule1, rule2.}
+\end{itemize}
+\subsection*{compilateur à la volée}
+Technique permettant de recompiler des bouts de code de manière dynamique lors de l'exécution du programme, pour les rendre plus performants.
+\subsection*{contexte}
+Contexte de l'application, contenant des informations sur les clauses et sur l'environnement du programme. Dans le projet, le contexte peut désigner deux classes :
+\begin{itemize}
+    \item La classe \texttt{ProloGraalRuntime}, qui représente le contexte d'exécution et contient les clauses du programme
+    \item La classe \texttt{ProloGraalContext}, qui contient le contexte globale avec des références vers la sortie et l'entrée standards du programme
+\end{itemize}
+\subsection*{faits}
+Clause Prolog de la forme : \mintinline{Prolog}{fact.}.
+\subsection*{fichier de grammaire}
+Fichier contenant du code compréhensible par ANTLR.
+\subsection*{foncteur}
+Désignateur d'une structure Prolog. Dans la structure \mintinline{Prolog}{a(b, c)}, \texttt{'a'} est le foncteur.
+\subsection*{framework}
+Ensemble de librairies et autres composants.
+\subsection*{interpréteur}
+Peut désigner deux choses :
+\begin{itemize}
+    \item Un interpréteur de langage, qui lit un code source et se charge de l'exécuter (sans le compiler).
+    \item L'interpréteur Prolog, qui est une interface en ligne de commande permettant d'effectuer des requêtes sur un programme Prolog.
+\end{itemize}
+\subsection*{lexer}
+Composant chargé de lire un fichier source, et de créer à partir des caractères des unités compréhensibles pour le parser.
+\subsection*{librairie}
+Ensemble de classes externes réalisant une ou plusieurs fonctionnalités spécifiques.
+\subsection*{liste}
+En Prolog, désigne une structure de la forme \mintinline{Prolog}{[a,b,c | d]}. Une liste possède possiblement une queue, ou \textit{tail} en anglais, qui désigne l'élément à la fin de celle-ci.
+\subsection*{machine virtuelle}
+Couche logicielle permettant l'interprétation d'un langage de plus haut niveau.
+\subsection*{main}
+Fonction principale d'un programme.
+\subsection*{open source}
+Projet dont le code source est disponible publiquement.
+\subsection*{parser}
+Composant chargé de donner un sens aux jetons créés par le lexer, afin de créer des structures de plus haut niveau.
+\subsection*{pattern de développement}
+Patron donnant une réalisation standard d'un composant.
+\subsection*{requête}
+Question posée à l'interpréteur Prolog.
+\subsection*{structure}
+En Prolog, structure de forme \mintinline{Prolog}{a(b, c)}.
+\subsection*{termes}
+En Prolog, mot générique désignant les autres unités de données (structures, variables, etc...).
+\subsection*{unification}
+Mécanisme permettant de rendre deux termes logiques identiques.
+\subsection*{variables}
+En Prolog, représente une inconnue logique, capable de prendre une valeur lors de l'unification.
+\end{document}

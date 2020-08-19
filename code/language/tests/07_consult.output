@@ -1,0 +1,20 @@
+% consult('./tests/07_consult_clauses.pl.excluded').
+yes
+% '='(Clauses,~test(10). test(12). string(abc).~), consultstring(Clauses).
+Clauses = test(10). test(12). string(abc).
+yes
+% hello(world).
+yes
+% addedClause(A).
+A = test
+yes
+% test(10), test(12), string(abc).
+yes
+% test(14).
+no
+% consultstring('test(14).').
+yes
+% test(14).
+yes
+% EOF
+yes

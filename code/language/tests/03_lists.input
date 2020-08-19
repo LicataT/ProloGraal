@@ -1,0 +1,11 @@
+test([a, b, c, d]).
+test([a, b, c, d | []]).
+test([a, b | [c, d]]).
+test('.'(a, '.'(b, '.'(c, '.'(d, []))))).
+test([a, b | Xs]).
+test([Head | Tail]).
+test([a, B, C, d]).
+test([a, B, C | Tail]).
+unify([a,b,c], X).
+unify(X, [a,b,c]).
+unify([a | Xs], [a,b,c | Ys]).

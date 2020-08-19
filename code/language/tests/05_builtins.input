@@ -1,0 +1,10 @@
+var(A).
+var(a).
+isVar(A).
+isVar(a).
+linkTest(X).
+linkTest2(X).
+write(a).
+write('test').
+write(A).
+testWrite.

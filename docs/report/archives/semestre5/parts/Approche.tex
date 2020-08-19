@@ -1,0 +1,42 @@
+\documentclass[../report.tex]{subfiles}
+\begin{document}
+\section{Approche et méthodologie}
+Cette section décrit la méthodologie suivie pour le projet ainsi que l'approche initiale utilisée pour démarrer le projet.
+\subsection{Gestion du projet}
+Le projet suit un planning établi préalablement, basé sur le cahier des charges, et des séances hebdomadaires avec le responsable de projet sont tenues afin de contrôler le bon déroulement de celui-ci. Un procès-verbal de chaque séance est rédigé, afin de garder une traces des décisions et constatations faites lors des séances. Le planning est disponible en annexe (annexe \ref{subsec:planning}).
+
+Pour la partie technique, un répertoire du logiciel de gestion de versions \textit{Git} est utilisé pour gérer les fichiers du projet. Le répertoire utilise principalement deux branches : la branche "master" contenant le dernier prototype fonctionnel du projet, et la branche "wip" contenant les dernières fonctionnalités, potentiellement encore en cours d'implémentation ou non testées. Sur la branche "master", des "tags" sont utilisés pour marquer les étapes clés du projet. Un lien vers le répertoire du projet est disponible en annexe (\ref{subsec:projectlink}).
+\subsection{Phases du projet}\label{subsec:projectPhases}
+Sur la base du cahier des charges, le projet a été découpé en trois phases principales. Ces phases correspondent à des paliers de fonctionnalités à atteindre, dans le but d'obtenir un prototype fonctionnel à la fin de chacune de ces phases. Ces phases sont décrites en détail dans le cahier des charges disponible en annexe, mais un rappel des différents objectifs de chaque phase sera disponible avant leur section dédiée plus loin dans ce rapport.
+
+En résumé, les phases du projet sont les suivantes :
+\begin{enumerate}
+    \item Fonctionnalités de base : parsing de faits simples, sans variables
+    \item Ajout du support des variables pour ces faits
+    \item Ajout du support des clauses complexes et des listes
+\end{enumerate}
+\subsection{Démarrage du projet}
+Le projet a été démarré en énumérant les connaissances requises pour celui-ci. On en trouve deux principales : l'utilisation de Truffle et l'implémentation d'un interpréteur Prolog.
+
+Pour l'utilisation de Truffle, le point de départ est principalement le langage de démonstration fourni en tant que documentation officielle, SimpleLanguage, qui est une implémentation complète d'un langage de programmation fictif en utilisant Truffle. Différents articles de blogs donnent également une bonne base pour se lancer dans l'implémentation. Ces articles sont listés dans la section suivante.
+
+Pour l'implémentation d'un interpréteur Prolog, le choix a été fait d'étudier les différentes manières existantes, mais de quand même repartir de zéro, en gardant uniquement la "philosophie" de certaines implémentations, pas de base de code. Les différents articles, publications scientifiques et implémentations existantes servant de référence sont listés dans la section suivante.
+\subsection{Littérature et références}
+Cette section liste les différentes références servant de base et de guide au projet.
+\subsubsection{Utilisation de Truffle}
+\begin{itemize}
+    \item \cite{SimpleLanguage} : Projet de démonstration officiel utilisant Truffle
+    \item \cite{OneVM} : Conférence Oracle sur l'utilisation de Truffle et GraalVM
+    \item \cite{WritingTruffle} : Tutoriel sur l'implémentation d'un langage avec Truffle
+\end{itemize}
+\subsubsection{Implémentation d'un interpréteur Prolog}
+\begin{itemize}
+    \item \cite{WarrenAM} : Livre décrivant une implémentation abstraite possible d'un moteur Prolog
+    \item \cite{JIProlog} : Projet open source implémentant un moteur Prolog en Java
+\end{itemize}
+\subsubsection{Autres}
+\begin{itemize}
+    \item \cite{PrologSyntax} : Référence officielle pour la syntaxe Prolog
+    \item \cite{ANTLRTutorial} : Tutoriel sur l'utilisation de ANTLR
+\end{itemize}
+\end{document}

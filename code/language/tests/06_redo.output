@@ -1,0 +1,45 @@
+% multifacts(X).
+X = a
+yes
+% redo.
+X = b
+yes
+% redo.
+X = c
+yes
+% redo.
+no
+% listPrefix([a,b,c,d], X).
+X = [a, b, c, d]
+yes
+% redo.
+X = [a, b, c]
+yes
+% redo.
+X = [a, b]
+yes
+% redo.
+X = [a]
+yes
+% redo.
+X = []
+yes
+% redo.
+no
+% testWrite.
+abc
+yes
+% redo.
+d
+yes
+% go.
+10
+yes
+% redo.
+yes
+% redo.
+yes
+% redo.
+no
+% EOF
+yes

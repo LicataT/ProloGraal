@@ -1,0 +1,35 @@
+% this file is a show of some atrocities that may or may not compile in gprolog
+
+% valid
+a :- 
+    test(X).
+a.
+
+test([a,b, f(X)]).
+
+[]. 
+
+% illegal but not fatal
+
+a,b :- test(X).
+
+a,b :- test(X), d.
+
+[a, X] :-
+    test(X).
+
+[a,b,c].
+
+% fatal
+
+% ending :- .
+
+% b :- 
+%    test(X),
+%    5, --> not callable
+%    a.
+
+% test([test(X) :- test(X), b]).
+% 8 :- test(X).
+% 5.
+% A.

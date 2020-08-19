@@ -1,0 +1,45 @@
+% test(a, b).
+yes
+% test(A, B).
+A = a
+B = b
+yes
+% test(a, B).
+B = b
+yes
+% test(X, X).
+no
+% listConcat([a, b], [c,d], [a,b,c,d]).
+yes
+% listConcat([a, b], X, [a,b,c,d]).
+X = [c, d]
+yes
+% listConcat(X, [c,d], [a,b,c,d]).
+X = [a, b]
+yes
+% concatDL('-'([a, b, c | Xs], Xs), '-'([d, e, f | Ys], Ys), R).
+Xs = [d, e, f | Ys]
+R = -/2([a, b, c, d, e, f | Ys], Ys)
+yes
+% listSuffix([a,b,c], [b,c]).
+yes
+% listRightTrim([a,b,c], X).
+X = [a, b]
+yes
+% listPrefix([a,b,c], [a,b]).
+yes
+% owns([a,b,c,d,e,f], d).
+yes
+% owns([a,b,c,d,e,f], g).
+no
+% listSublist1([a,b,c,d,e], [b,c,d]).
+yes
+% listSublist1([a,b,c,d,e], [b,c,X]).
+X = d
+yes
+% unifyMany([a,b,C,D,f(E)], [a,b,c,D,f(e)]).
+C = c
+E = e
+yes
+% EOF
+yes

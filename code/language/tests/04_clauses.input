@@ -1,0 +1,16 @@
+test(a, b).
+test(A, B).
+test(a, B).
+test(X, X).
+listConcat([a, b], [c,d], [a,b,c,d]).
+listConcat([a, b], X, [a,b,c,d]).
+listConcat(X, [c,d], [a,b,c,d]).
+concatDL('-'([a, b, c | Xs], Xs), '-'([d, e, f | Ys], Ys), R).
+listSuffix([a,b,c], [b,c]).
+listRightTrim([a,b,c], X).
+listPrefix([a,b,c], [a,b]).
+owns([a,b,c,d,e,f], d).
+owns([a,b,c,d,e,f], g).
+listSublist1([a,b,c,d,e], [b,c,d]).
+listSublist1([a,b,c,d,e], [b,c,X]).
+unifyMany([a,b,C,D,f(E)], [a,b,c,D,f(e)]).

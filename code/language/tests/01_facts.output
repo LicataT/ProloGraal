@@ -1,0 +1,40 @@
+% fact.
+yes
+% fact2.
+Error : no clause for goal 'fact2'
+% fact(X).
+Error : no clause for goal 'fact/1(X)'
+% hello(world).
+yes
+% hello(world2).
+yes
+% hello(world3).
+no
+% multiples(arg1, arg2).
+yes
+% multiples(arg1, arg3).
+no
+% 'this is also'('a fact').
+yes
+% numbers(test, 42, 21.21).
+yes
+% numbers(test, 42, 21.2121).
+no
+% this(is(getting, a(bit(out, of, hand)))).
+yes
+% fact(world).
+Error : no clause for goal 'fact/1(world)'
+% EOF
+yes
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+% test([a, b, c, d]).
+yes
+% test([a, b, c, d | []]).
+yes
+% test([a, b | [c, d]]).
+yes
+% test('.'(a, '.'(b, '.'(c, '.'(d, []))))).
+yes
+% test([a, b | Xs]).
+Xs = [c, d]
+yes
+% test([Head | Tail]).
+Head = a
+Tail = [b, c, d]
+yes
+% test([a, B, C, d]).
+B = b
+C = c
+yes
+% test([a, B, C | Tail]).
+B = b
+C = c
+Tail = [d]
+yes
+% unify([a,b,c], X).
+X = [a, b, c]
+yes
+% unify(X, [a,b,c]).
+X = [a, b, c]
+yes
+% unify([a | Xs], [a,b,c | Ys]).
+Xs = [b, c | Ys]
+yes
+% EOF
+yes

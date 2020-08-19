@@ -1,0 +1,100 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{ae, lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\graphicspath{{figs/}}
+\usepackage{titlesec}
+\usepackage{minted}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{subfiles}
+\usepackage{lastpage}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usepackage{csquotes}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+\usepackage[a4paper, left=20mm, right=20mm, top=20mm, bottom=30mm]{geometry}
+
+\setlength{\parindent}{0in}
+\titlespacing\section{0pt}{6pt plus 2pt minus 2pt}{6pt plus 2pt minus 2pt}
+\titlespacing\subsection{0pt}{6pt plus 2pt minus 2pt}{6pt plus 2pt minus 2pt}
+
+\title{\vspace{-2,0cm}%
+\includegraphics[width=\textwidth]{../logo.png}~
+\\[2cm]
+\Huge
+\hrulefill\\
+\vspace{1,0cm}
+Prolog avec Truffle et GraalVM\\
+Rapport final\\
+\vspace{0,6cm}
+\Large
+\hrulefill\\\vspace{2,0cm}
+Projet de semestre 5\\
+I-3\\
+Automne 2019/2020
+\vspace{2.5cm}}
+\author{
+  Martin Spoto \\
+  martin.spoto@edu.hefr.ch\\
+  \\
+  Responsable :\\
+  Frédéric Bapst\\
+  Frederic.Bapst@hefr.ch
+}
+
+\renewcommand{\sl}{\textit{SimpleLanguage}}
+
+\usepackage[
+  style=alphabetic,
+  citestyle=alphabetic
+]{biblatex}
+\renewcommand*{\newunitpunct}{\addcomma\space}
+\renewbibmacro{in:}{}
+\addbibresource{bibliography.bib}
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+
+\begin{document}
+\maketitle
+
+\afterpage{\blankpage}
+\pagebreak
+\tableofcontents
+\pagebreak
+
+\subfile{parts/Introduction}
+\subfile{parts/Technologies}
+\subfile{parts/Approche}
+\subfile{parts/Phase1}
+\subfile{parts/Phase2}
+\subfile{parts/Phase3}
+\subfile{parts/PhaseBonus}
+\subfile{parts/TestsUnitaires}
+\subfile{parts/Problemes}
+\subfile{parts/Ameliorations}
+\subfile{parts/Conclusion}
+\printbibliography[heading=bibintoc]
+\pagebreak
+\subfile{parts/Glossaire}
+\pagebreak
+\subfile{parts/Annexes}
+\end{document}

@@ -1,0 +1,16 @@
+multifacts(X).
+redo.
+redo.
+redo.
+listPrefix([a,b,c,d], X).
+redo.
+redo.
+redo.
+redo.
+redo.
+testWrite.
+redo.
+go.
+redo.
+redo.
+redo.

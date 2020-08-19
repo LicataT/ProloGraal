@@ -1,0 +1,48 @@
+\documentclass[../report.tex]{subfiles}
+\begin{document}
+\section{Introduction}
+\textit{Prolog avec Truffle et GraalVM} est un projet de semestre réalisé durant le semestre d'automne 2019-2020. Ce rapport contient une trace du déroulement, des choix et des problèmes rencontrés et résolus au fil du projet.
+\subsection{Contexte}
+GraalVM est une machine virtuelle universelle basée sur la \textit{Java Virtual Machine} conçue pour permettre l'interprétation à haute performance de n'importe quel langage de programmation, pour autant qu'un interpréteur pour ce langage soit disponible.  Truffle est le nom du framework permettant l'implémentation en Java d'un tel interpréteur.
+
+Des interpréteurs sont disponibles pour de nombreux langages, tels que JavaScript, Python, Ruby et même C et C++, mais il n'existe actuellement aucun interpréteur pour le langage de programmation logique Prolog.
+
+Le but de ce projet est donc de réaliser cet interpréteur, afin de prouver la faisabilité technique de l'implémentation d'un langage de programmation logique sur cette plateforme.
+\subsection{Objectifs}\label{subsec:projetobjectives}
+L'objectif principal du projet est de fournir un interpréteur pour le langage Prolog basé sur GraalVM et Truffle. Cependant, en raison des contraintes temporelles du projet, implémenter la totalité du langage Prolog n'est pas réalisable. Un sous-ensemble de fonctionnalités jugées "de base" a donc été sélectionné. Les fonctionnalités retenues sont les suivantes :
+\begin{itemize}
+    \item Gestion de termes simples et composés
+    \item Gestion de clauses comprenant des appels récursifs
+    \item Gestion des variables
+    \item Gestion de la notation simplifiée pour les listes
+    \item Unification de termes, variables
+    \item Gestion de la résolution par \textit{backtracking}
+    \item Gestion des requêtes depuis la ligne de commande
+\end{itemize}
+Un certain nombre de fonctionnalités sont également retenues si l'implémentation s'avère plus rapide ou plus simple que prévue. Ces fonctionnalités sont listées sans ordre de priorité ci-dessous :
+\begin{itemize}
+  \item Gestion de calculs avec is/2
+  \item Opérateur "!" (\textit{cut})
+  \item \textit{assert} et \textit{retract}
+  \item Gestion des exceptions
+  \item Traceur de résolution
+  \item Opérateurs mathématiques et logiques usuels (+ - * / = < >)
+  \item Librairie standard, I/O
+  \item Profiter de GraalVM/Truffle pour fournir une interface avec d'autres langages
+  \item Profiter de GraalVM/Truffle pour fournir un débogueur
+\end{itemize}
+\subsection{Déroulement}
+Le projet a été découpé en 4 phases clés :
+\begin{enumerate}
+    \setcounter{enumi}{-1}
+    \item Analyse et prise en main des technologies
+    \item Version minimale de l'interpréteur, fonctionnant uniquement pour des faits
+    \item Ajout du support des variables, toujours uniquement sur des faits
+    \item Ajout du support des clauses composées et récursives
+\end{enumerate}
+Ces phases sont détaillées dans la section \ref{subsec:projectPhases}.
+\subsection{Structure du rapport}
+Le rapport est découpé selon les différentes phases du projet. Chaque phase contient une partie d'analyse des besoins puis décrit la réalisation de ladite phase.
+
+Ce rapport fait l'hypothèse que le lecteur est familier avec le langage de programmation logique Prolog ainsi qu'avec le language Java, pour se concentrer sur les explications de la réalisation de l'interpréteur. Toutefois un glossaire des termes techniques utilisés est disponible en fin de document (section \ref{sec:glossary}).
+\end{document}

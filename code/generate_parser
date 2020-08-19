@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# requires envsetup
+prefix="ProloGraal"
+
+# setup and create temp directory
+cd $PROJECT_ROOT/language/src/main/java/ch/heiafr/prolograal/parser/
+mkdir -p .antlr
+cp -f "$prefix.g4" ".antlr/$prefix.g4"
+cd .antlr
+
+# run ANTLR
+java -cp $PROJECT_ROOT/antlr-4.7.1-complete.jar org.antlr.v4.Tool -package ch.heiafr.prolograal.parser "ProloGraal.g4"
+#java -cp $PROJECT_ROOT/antlr-4.7.1-complete.jar org.antlr.v4.Tool "ProloGraal.g4"
+#javac -cp $PROJECT_ROOT/antlr-4.7.1-complete.jar *.java
+
+# copy results
+cp -f *.java ../
+#cp -f *.class ../
+
+# cleanup
+cd ..
+rm -rf .antlr

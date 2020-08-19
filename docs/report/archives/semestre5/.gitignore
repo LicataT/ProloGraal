@@ -1,0 +1,10 @@
+# ignores everything but LaTeX files and pdf output
+
+/*
+!.gitignore
+!report.pdf
+!*.tex
+!/parts/
+!/diagrams/
+!/figs/
+!bibliography.bib

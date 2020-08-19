@@ -1,0 +1,5 @@
+#!/bin/bash
+
+source $HOME/.bashrc
+alias antlr4="java -cp $PROJECT_ROOT/antlr-4.7.1-complete.jar org.antlr.v4.Tool"
+alias grun="java -cp $PROJECT_ROOT/antlr-4.7.1-complete.jar:. org.antlr.v4.gui.TestRig"

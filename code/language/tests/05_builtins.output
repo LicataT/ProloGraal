@@ -1,0 +1,27 @@
+% var(A).
+yes
+% var(a).
+no
+% isVar(A).
+yes
+% isVar(a).
+no
+% linkTest(X).
+no
+% linkTest2(X).
+X = 3
+yes
+% write(a).
+a
+yes
+% write('test').
+test
+yes
+% write(A).
+A
+yes
+% testWrite.
+abc
+yes
+% EOF
+yes

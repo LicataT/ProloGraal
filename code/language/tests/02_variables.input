@@ -1,0 +1,20 @@
+fact(a).
+fact(b).
+fact(X).
+multifacts(a).
+multifacts(Y).
+multiargs(X, Y).
+hello(world, a).
+hello(X, a).
+hello(X, Y).
+multiple(a, b, c).
+multiple(a, b, a).
+multiple(a, b, X).
+multiple(X, b, a).
+nested(X, one(Y, two(three(a)))).
+f(B, h(A)).
+indirection(A, B, C, x).
+occurs(X, X).
+e(f(A,B,C,D,E), f(a(B),a(C),h,a(C),a(D))).
+e(f(A,B,C,D,E), f(a(B),a(C),A,a(C),a(D))).
+e(f(A,B,C,D,E), f(a(B),a(C),E,a(C),a(D))).

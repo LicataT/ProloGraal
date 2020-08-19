@@ -1,0 +1,58 @@
+% fact(a).
+yes
+% fact(b).
+yes
+% fact(X).
+yes
+% multifacts(a).
+yes
+% multifacts(Y).
+Y = a
+yes
+% multiargs(X, Y).
+X = a
+Y = b
+yes
+% hello(world, a).
+yes
+% hello(X, a).
+X = world
+yes
+% hello(X, Y).
+X = world
+yes
+% multiple(a, b, c).
+no
+% multiple(a, b, a).
+yes
+% multiple(a, b, X).
+X = a
+yes
+% multiple(X, b, a).
+X = a
+yes
+% nested(X, one(Y, two(three(a)))).
+X = a
+yes
+% f(B, h(A)).
+yes
+% indirection(A, B, C, x).
+A = x
+B = x
+C = x
+yes
+% occurs(X, X).
+no
+% e(f(A,B,C,D,E), f(a(B),a(C),h,a(C),a(D))).
+A = a/1(a/1(h))
+B = a/1(h)
+C = h
+D = a/1(h)
+E = a/1(a/1(h))
+yes
+% e(f(A,B,C,D,E), f(a(B),a(C),A,a(C),a(D))).
+no
+% e(f(A,B,C,D,E), f(a(B),a(C),E,a(C),a(D))).
+no
+% EOF
+yes
